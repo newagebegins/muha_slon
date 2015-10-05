@@ -3,6 +3,7 @@
 define('START_WORD', 'муха');
 define('END_WORD', 'слон');
 define('WORD_LEN', 4);
+define('WORD_LEN_IN_BYTES', WORD_LEN*2); // UTF-8 2-byte characters
 
 function main()
 {
@@ -39,8 +40,12 @@ function main()
             }
 
             $differentLettersCount = 0;
-            for ($letterIdx = 0; $letterIdx < WORD_LEN; ++$letterIdx) {
-                if (mb_substr($words[$wordIndex1], $letterIdx, 1) != mb_substr($words[$wordIndex2], $letterIdx, 1)) {
+            // Using mb_strlen is costly here, so we compare raw bytes,
+            // assuming 2-byte cyrillic characters.
+            // This version is ~3 times faster than mb_strlen version (17s -> 6s).
+            for ($letterIdx = 0; $letterIdx < WORD_LEN_IN_BYTES; $letterIdx += 2) {
+                if (($words[$wordIndex1][$letterIdx] != $words[$wordIndex2][$letterIdx]) ||
+                    ($words[$wordIndex1][$letterIdx+1] != $words[$wordIndex2][$letterIdx+1])) {
                     ++$differentLettersCount;
                     if ($differentLettersCount > 1) {
                         break;

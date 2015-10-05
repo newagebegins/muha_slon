@@ -9,16 +9,11 @@ function main()
 {
     mb_internal_encoding("UTF-8");
 
+    //
+    // Put all 4-letter words from dictionary into array.
+    //
+
     $words = array();
-
-    // Graph data.
-    $adjacencyLists = array();
-    $marked = array();
-    $edgeTo = array();
-
-    // Breadth-first search queue.
-    $bfsQueue = array();
-
     $dictionaryFile = fopen('dictionary.txt', 'r');
 
     if (!$dictionaryFile) {
@@ -35,7 +30,28 @@ function main()
 
     fclose($dictionaryFile);
 
+    $startWordIndex = array_search(START_WORD, $words);
+    if (!$startWordIndex) {
+        print "Couldn't find start word in the dictionary!\n";
+        return;
+    }
+
+    $endWordIndex = array_search(END_WORD, $words);
+    if (!$endWordIndex) {
+        print "Couldn't find end word in the dictionary!\n";
+        return;
+    }
+
     $wordsCount = count($words);
+
+    //
+    // Generate a graph of words, adding edges between words that differ by
+    // one letter.
+    //
+
+    $adjacencyLists = array();
+    $marked = array();
+    $edgeTo = array();
 
     for ($wordIndex1 = 0; $wordIndex1 < $wordsCount; ++$wordIndex1) {
         for ($wordIndex2 = 0; $wordIndex2 < $wordsCount; ++$wordIndex2) {
@@ -63,18 +79,12 @@ function main()
         }
     }
 
-    $startWordIndex = array_search(START_WORD, $words);
-    if (!$startWordIndex) {
-        print "Couldn't find start word in the dictionary!\n";
-        return;
-    }
+    //
+    // Use breadth-first search to find the shortest path from the start word
+    // to the end word.
+    //
 
-    $endWordIndex = array_search(END_WORD, $words);
-    if (!$endWordIndex) {
-        print "Couldn't find end word in the dictionary!\n";
-        return;
-    }
-
+    $bfsQueue = array();
     $marked[$startWordIndex] = true;
     array_push($bfsQueue, $startWordIndex);
 
@@ -90,6 +100,10 @@ function main()
             array_push($bfsQueue, $adjacentIndex);
         }
     }
+
+    //
+    // Output the path if it exists.
+    //
 
     if (!isset($marked[$endWordIndex])) {
         print "Can't convert start word to the end word.\n";

@@ -10,9 +10,13 @@ function main()
     mb_internal_encoding("UTF-8");
 
     $words = array();
+
+    // Graph data.
     $adjacencyLists = array();
     $marked = array();
     $edgeTo = array();
+
+    // Breadth-first search queue.
     $bfsQueue = array();
 
     $dictionaryFile = fopen('dictionary.txt', 'r');

@@ -14,7 +14,7 @@ function main()
     //
 
     $words = array();
-    $dictionaryFile = fopen('dictionary.txt', 'r');
+    $dictionaryFile = fopen(dirname(__FILE__) . '/../data/dictionary.txt', 'r');
 
     if (!$dictionaryFile) {
         print "Couldn't open dictionary file!\n";

@@ -9,12 +9,14 @@ function differByOneLetter($word1, $word2)
     $differenceCount = 0;
     for ($letterIdx = 0; $letterIdx < WORD_LEN; ++$letterIdx) {
         if (mb_substr($word1, $letterIdx, 1) != mb_substr($word2, $letterIdx, 1)) {
+            if ($differenceCount > 0) {
+                return false;
+            }
             ++$differenceCount;
         }
     }
 
-    $result = $differenceCount == 1;
-    return $result;
+    return false;
 }
 
 function main()

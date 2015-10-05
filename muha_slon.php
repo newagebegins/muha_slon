@@ -45,8 +45,10 @@ function main()
 
     fclose($dictionaryFile);
 
-    for ($wordIndex1 = 0; $wordIndex1 < count($words); ++$wordIndex1) {
-        for ($wordIndex2 = 0; $wordIndex2 < count($words); ++$wordIndex2) {
+    $wordsCount = count($words);
+
+    for ($wordIndex1 = 0; $wordIndex1 < $wordsCount; ++$wordIndex1) {
+        for ($wordIndex2 = 0; $wordIndex2 < $wordsCount; ++$wordIndex2) {
             if ($wordIndex1 == $wordIndex2) {
                 continue;
             }

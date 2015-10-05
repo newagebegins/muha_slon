@@ -4,21 +4,6 @@ define('START_WORD', 'муха');
 define('END_WORD', 'слон');
 define('WORD_LEN', 4);
 
-function differByOneLetter($word1, $word2)
-{
-    $differenceCount = 0;
-    for ($letterIdx = 0; $letterIdx < WORD_LEN; ++$letterIdx) {
-        if (mb_substr($word1, $letterIdx, 1) != mb_substr($word2, $letterIdx, 1)) {
-            if ($differenceCount > 0) {
-                return false;
-            }
-            ++$differenceCount;
-        }
-    }
-
-    return false;
-}
-
 function main()
 {
     mb_internal_encoding("UTF-8");
@@ -53,10 +38,17 @@ function main()
                 continue;
             }
 
-            if (differByOneLetter($words[$wordIndex1], $words[$wordIndex2])) {
-                if (!isset($adjacencyLists[$wordIndex1])) {
-                    $adjacencyLists[$wordIndex1] = array();
+            $differentLettersCount = 0;
+            for ($letterIdx = 0; $letterIdx < WORD_LEN; ++$letterIdx) {
+                if (mb_substr($words[$wordIndex1], $letterIdx, 1) != mb_substr($words[$wordIndex2], $letterIdx, 1)) {
+                    ++$differentLettersCount;
+                    if ($differentLettersCount > 1) {
+                        break;
+                    }
                 }
+            }
+
+            if ($differentLettersCount == 1) {
                 $adjacencyLists[$wordIndex1][] = $wordIndex2;
             }
         }
